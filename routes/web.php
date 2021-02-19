@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::post('app/create_tag','testController@index');
 
 Route::get('/', function () {
     return view('welcome');
@@ -20,5 +21,9 @@ Route::get('/', function () {
 Route::any('{slug}', function() {
     return view('welcome');
 });
+
+Route::post('app/create_tag','Admin\tagController@store');
+Route::get('app/get_tag','Admin\tagController@getTag');
+
 
 
