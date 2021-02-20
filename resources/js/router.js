@@ -3,7 +3,8 @@ import Router from 'vue-router'
 Vue.use(Router)
 import firstPage from './components/pages/firstVuePage.vue'
 import home from './components/pages/home.vue'
-import tag from './components/pages/tag.vue'
+import tag from './admin/pages/tag.vue'
+import category from './admin/pages/category.vue'
 const routes = [
     
     {
@@ -13,6 +14,10 @@ const routes = [
     {
         path: '/tag',
         component: tag
+    },
+    {
+        path: '/category',
+        component: category
     },
     {
         path: '/my-new-vue-route',

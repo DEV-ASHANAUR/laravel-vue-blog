@@ -17,7 +17,7 @@
 							</tr>
 								<!-- TABLE TITLE -->
 								<!-- ITEMS -->
-							<tr v-for="(tag,i) in tags" :key="i" v-if="tags.length">
+							<tr v-for="(tag,i) in tags" :key="i">
 								<td>{{ i+1 }}</td>
 								<td class="_table_name">{{ tag.tagName }}</td>
 								<td>{{ tag.created_at }}</td>
@@ -187,7 +187,7 @@ export default {
 	},
 	async created() {
 		const res = await this.callApi('get','/app/get_tag');
-		console.log(res);
+		// console.log(res);
 		if(res.status==200){
 			this.tags = res.data
 		}else{
