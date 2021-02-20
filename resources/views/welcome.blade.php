@@ -6,6 +6,15 @@
 
         <title>Full Stack Blog</title>
         <link rel="stylesheet" href="{{ asset('css/all.css') }}">
+        <script>
+
+            (function () {
+                window.Laravel = {
+                    csrfToken: '{{ csrf_token() }}'
+                };
+            })();
+
+        </script>
     </head>
     <body>
         <div id="app">

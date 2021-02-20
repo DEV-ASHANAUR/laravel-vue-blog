@@ -2008,6 +2008,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2025,7 +2036,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       isDeleting: false,
       showDeleteModel: false,
       deletingIndex: -1,
-      deleteItem: {}
+      deleteItem: {},
+      token: ''
     };
   },
   methods: {
@@ -2201,10 +2213,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         while (1) {
           switch (_context4.prev = _context4.next) {
             case 0:
-              _context4.next = 2;
+              _this4.token = window.Laravel.csrfToken;
+              _context4.next = 3;
               return _this4.callApi('get', '/app/get_tag');
 
-            case 2:
+            case 3:
               res = _context4.sent;
 
               // console.log(res);
@@ -2214,7 +2227,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _this4.swr();
               }
 
-            case 4:
+            case 5:
             case "end":
               return _context4.stop();
           }
@@ -67499,7 +67512,7 @@ var render = function() {
               "p",
               { staticClass: "_title0" },
               [
-                _vm._v("Tags "),
+                _vm._v("Categories "),
                 _c(
                   "Button",
                   {
@@ -67511,7 +67524,7 @@ var render = function() {
                   },
                   [
                     _c("Icon", { attrs: { type: "md-add" } }),
-                    _vm._v(" Add Tag")
+                    _vm._v(" Add Category")
                   ],
                   1
                 )
@@ -67580,7 +67593,7 @@ var render = function() {
                 attrs: {
                   "mask-closable": false,
                   closable: false,
-                  title: "Add Tag"
+                  title: "Add Category"
                 },
                 model: {
                   value: _vm.addModal,
@@ -67592,7 +67605,7 @@ var render = function() {
               },
               [
                 _c("Input", {
-                  attrs: { placeholder: "Enter tag name" },
+                  attrs: { placeholder: "Enter Category name" },
                   model: {
                     value: _vm.data.tagName,
                     callback: function($$v) {
@@ -67601,6 +67614,34 @@ var render = function() {
                     expression: "data.tagName"
                   }
                 }),
+                _vm._v(" "),
+                _c("div", { staticClass: "space" }),
+                _vm._v(" "),
+                _c(
+                  "Upload",
+                  {
+                    attrs: {
+                      type: "drag",
+                      headers: { "x-csrf-token": _vm.token },
+                      action: "/app/cat_icon"
+                    }
+                  },
+                  [
+                    _c(
+                      "div",
+                      { staticStyle: { padding: "20px 0" } },
+                      [
+                        _c("Icon", {
+                          staticStyle: { color: "#3399ff" },
+                          attrs: { type: "ios-cloud-upload", size: "52" }
+                        }),
+                        _vm._v(" "),
+                        _c("p", [_vm._v("Click or drag files here to upload")])
+                      ],
+                      1
+                    )
+                  ]
+                ),
                 _vm._v(" "),
                 _c(
                   "div",
@@ -67629,7 +67670,11 @@ var render = function() {
                         },
                         on: { click: _vm.addTag }
                       },
-                      [_vm._v(_vm._s(_vm.isAdding ? "Adding.." : "Add Tag"))]
+                      [
+                        _vm._v(
+                          _vm._s(_vm.isAdding ? "Adding.." : "Add Category")
+                        )
+                      ]
                     )
                   ],
                   1

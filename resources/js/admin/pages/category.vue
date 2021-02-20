@@ -4,7 +4,7 @@
 			<div class="container-fluid">	
 				<!--~~~~~~~ TABLE ONE ~~~~~~~~~-->
 				<div class="_1adminOverveiw_table_recent _box_shadow _border_radious _mar_b30 _p20">
-					<p class="_title0">Tags <Button @click="addModal=true"><Icon type="md-add"></Icon> Add Tag</Button> </p>
+					<p class="_title0">Categories <Button @click="addModal=true"><Icon type="md-add"></Icon> Add Category</Button> </p>
 
 					<div class="_overflow _table_div">
 						<table class="_table">
@@ -35,12 +35,23 @@
 						v-model="addModal"
 						:mask-closable="false"
 						:closable="false"
-						title="Add Tag"
+						title="Add Category"
 						>
-						<Input v-model="data.tagName" placeholder="Enter tag name" />
+						<Input v-model="data.tagName" placeholder="Enter Category name" />
+                        <div class="space"></div>
+                        <Upload
+                            type="drag"
+                            :headers="{'x-csrf-token':token}"
+                            action="/app/cat_icon"
+                            >
+                            <div style="padding: 20px 0">
+                                <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
+                                <p>Click or drag files here to upload</p>
+                            </div>
+                        </Upload>
 						<div slot="footer">
 							<Button type="default" @click="addModal=false">Close</Button>
-							<Button @click="addTag" type="primary" :disabled="isAdding" :loading="isAdding">{{ isAdding ? 'Adding..':'Add Tag' }}</Button>
+							<Button @click="addTag" type="primary" :disabled="isAdding" :loading="isAdding">{{ isAdding ? 'Adding..':'Add Category' }}</Button>
 						</div>
 					</Modal>
 					<!-- tag add model end -->
@@ -96,7 +107,8 @@ export default {
 			isDeleting:false,
 			showDeleteModel:false,
 			deletingIndex:-1,
-			deleteItem:{}
+			deleteItem:{},
+            token:''
 		}	
 	},
 	methods : {
@@ -186,6 +198,7 @@ export default {
 		}
 	},
 	async created() {
+        this.token = window.Laravel.csrfToken
 		const res = await this.callApi('get','/app/get_tag');
 		// console.log(res);
 		if(res.status==200){
