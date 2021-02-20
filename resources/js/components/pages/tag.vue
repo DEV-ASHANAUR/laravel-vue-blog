@@ -16,15 +16,13 @@
 								<th>Action</th>
 							</tr>
 								<!-- TABLE TITLE -->
-
-
 								<!-- ITEMS -->
 							<tr v-for="(tag,i) in tags" :key="i" v-if="tags.length">
 								<td>{{ i+1 }}</td>
 								<td class="_table_name">{{ tag.tagName }}</td>
 								<td>{{ tag.created_at }}</td>
 								<td>
-									<Button type="info">Edit</Button>
+									<Button type="info" @click="showEditModal(tag,i)">Edit</Button>
 									<Button type="error">Delete</Button>
 									
 								</td>
@@ -45,7 +43,21 @@
 							<Button @click="addTag" type="primary" :disabled="isAdding" :loading="isAdding">{{ isAdding ? 'Adding..':'Add Tag' }}</Button>
 						</div>
 					</Modal>
-
+					<!-- tag add model end -->
+					<!-- tag edit model start -->
+					<Modal
+						v-model="editModal"
+						:mask-closable="false"
+						:closable="false"
+						title="Edit Tag"
+						>
+						<Input v-model="editData.tagName" placeholder="Enter tag name" />
+						<div slot="footer">
+							<Button type="default" @click="editModal=false">Close</Button>
+							<Button @click="EditTag" type="primary" :disabled="isAdding" :loading="isAdding">{{ isAdding ? 'Saving..':'Save Tag' }}</Button>
+						</div>
+					</Modal>
+					<!-- tag edit model end -->
 				</div>
 			</div>
 		</div>
@@ -59,9 +71,14 @@ export default {
 			data:{
 				tagName: ''
 			},
+			editData:{
+				tagName: ''
+			},
 			addModal : false,
+			editModal: false,
 			isAdding : false,
 			tags: [],
+			index : -1
 		}	
 	},
 	methods : {
@@ -84,12 +101,51 @@ export default {
 						if(res.data.errors.tagName){
 							this.e(res.data.errors.tagName[0])
 						}
+						this.isAdding = false
 					}else{
 						this.swr()
+						this.isAdding = false
 					}
 					
 				}
 			}
+		},
+		async EditTag(){
+			this.isAdding = true
+			if(this.editData.tagName.trim()==''){
+				this.isAdding = false
+				return this.e('Tag name is required');
+			}else{
+				const res = await this.callApi('post','/app/edit_tag',this.editData)
+				if(res.status == 200){
+					this.tags[this.index].tagName = this.editData.tagName
+					this.s("Tag Edit Successfully")
+					this.isAdding = false
+					this.editModal = false
+
+				}else{
+					if(res.status == 422){
+						if(res.data.errors.tagName){
+							this.e(res.data.errors.tagName[0])
+						}
+						this.isAdding = false
+					}else{
+						this.swr()
+						this.isAdding = false
+					}
+					
+				}
+			}
+		},
+		showEditModal(tag,index){
+			let obj = {
+				id : tag.id,
+				tagName : tag.tagName
+			}
+			this.editData = obj
+			this.editModal = true
+			this.index = index
+
 		}
 	},
 	async created() {
