@@ -10,20 +10,24 @@
 						<table class="_table">
 								<!-- TABLE TITLE -->
 							<tr>
-								<th>Id</th>
+								<th>Si</th>
+								<th>Icon</th>
 								<th>Tag</th>
 								<th>Created at</th>
 								<th>Action</th>
 							</tr>
 								<!-- TABLE TITLE -->
 								<!-- ITEMS -->
-							<tr v-for="(tag,i) in tags" :key="i">
+							<tr v-for="(category,i) in categoryList" :key="i">
 								<td>{{ i+1 }}</td>
-								<td class="_table_name">{{ tag.tagName }}</td>
-								<td>{{ tag.created_at }}</td>
+								<td class="iconImage">
+									<img :src="category.iconImage" />
+								</td>
+								<td style="text-transform:capitalize">{{ category.categoryName }}</td>
+								<td>{{ category.created_at }}</td>
 								<td>
-									<Button type="info" @click="showEditModal(tag,i)">Edit</Button>
-									<Button type="error" @click="showDeletingModel(tag,i)" :loading="tag.isDeleting">Delete</Button>
+									<Button type="info" @click="showEditModal(category,i)">Edit</Button>
+									<Button type="error" @click="showDeletingModel(category,i)" :loading="category.isDeleting">Delete</Button>
 									
 								</td>
 							</tr>
@@ -37,11 +41,18 @@
 						:closable="false"
 						title="Add Category"
 						>
-						<Input v-model="data.tagName" placeholder="Enter Category name" />
+						<Input v-model="data.categoryName" placeholder="Enter Category name" />
                         <div class="space"></div>
                         <Upload
+							ref="uploads"
                             type="drag"
-                            :headers="{'x-csrf-token':token}"
+                            :headers="{'x-csrf-token':token,'X-Requested-With': 'XMLHttpRequest'}"
+							:on-success="handleSuccess"
+							:on-error="handleError"
+							:format="['jpg','jpeg','png']"
+							:max-size="2048"
+							:on-format-error="handleFormatError"
+							:on-exceeded-size="handleMaxSize"
                             action="/app/cat_icon"
                             >
                             <div style="padding: 20px 0">
@@ -49,9 +60,15 @@
                                 <p>Click or drag files here to upload</p>
                             </div>
                         </Upload>
+						<div class="demo-upload-list" v-if="data.iconImage">
+							<img :src="`/uploads/category/${data.iconImage}`" />
+							<div class="demo-upload-list-cover">
+								<Icon type="ios-trash-outline" @click="deleteImage"></Icon>
+							</div>
+						</div>
 						<div slot="footer">
 							<Button type="default" @click="addModal=false">Close</Button>
-							<Button @click="addTag" type="primary" :disabled="isAdding" :loading="isAdding">{{ isAdding ? 'Adding..':'Add Category' }}</Button>
+							<Button @click="addCategory" type="primary" :disabled="isAdding" :loading="isAdding">{{ isAdding ? 'Adding..':'Add Category' }}</Button>
 						</div>
 					</Modal>
 					<!-- tag add model end -->
@@ -94,7 +111,8 @@ export default {
 	data(){
 		return {
 			data:{
-				tagName: ''
+				categoryName: '',
+				iconImage: ''
 			},
 			editData:{
 				tagName: ''
@@ -102,7 +120,7 @@ export default {
 			addModal : false,
 			editModal: false,
 			isAdding : false,
-			tags: [],
+			categoryList: [],
 			index : -1,
 			isDeleting:false,
 			showDeleteModel:false,
@@ -112,32 +130,41 @@ export default {
 		}	
 	},
 	methods : {
-		async addTag(){
+		async addCategory(){
 			this.isAdding = true
-			if(this.data.tagName.trim()==''){
+			if(this.data.categoryName.trim()==''){
 				this.isAdding = false
-				return this.e('Tag name is required');
-			}else{
-				const res = await this.callApi('post','/app/create_tag',this.data)
-				if(res.status == 201){
-					this.s("Tag has been Save Successfully")
-					this.tags.unshift(res.data)
-					this.data.tagName =''
-					this.isAdding = false
-					this.addModal = false
+				return this.e('Category name is required');
+			}
+			if(this.data.iconImage.trim()==''){
+				this.isAdding = false
+				return this.e('IconImage is required');
+			}
+			this.data.iconImage = `/uploads/category/${this.data.iconImage}`
+			const res = await this.callApi('post','/app/create_category',this.data)
+			if(res.status == 201){
+				this.s("Category has been Save Successfully")
+				this.categoryList.unshift(res.data)
+				this.data.categoryName =''
+				this.data.iconImage =''
+				this.$refs.uploads.clearFiles()
+				this.isAdding = false
+				this.addModal = false
 
-				}else{
-					if(res.status == 422){
-						if(res.data.errors.tagName){
-							this.e(res.data.errors.tagName[0])
-						}
-						this.isAdding = false
-					}else{
-						this.swr()
-						this.isAdding = false
+			}else{
+				if(res.status == 422){
+					if(res.data.errors.categoryName){
+						this.e(res.data.errors.categoryName[0])
 					}
-					
+					if(res.data.errors.iconImage){
+						this.e(res.data.errors.iconImage[0])
+					}
+					this.isAdding = false
+				}else{
+					this.swr()
+					this.isAdding = false
 				}
+				
 			}
 		},
 		async EditTag(){
@@ -195,17 +222,92 @@ export default {
 			this.deleteItem = tag
 			this.deletingIndex = i
 			this.showDeleteModel = true
-		}
+		},
+		handleSuccess (res, file) {
+			this.data.iconImage = res
+		},
+		handleError (res, file) {
+			// console.log('res',res)
+			// console.log('file',file)
+			this.$Notice.warning({
+				title: 'The file format is incorrect',
+				desc: `${file.errors.file.length ? file.errors.file[0]:'something went worng!'}`
+			});
+
+		},
+		handleFormatError (file) {
+			this.$Notice.warning({
+				title: 'The file format is incorrect',
+				desc: 'File format of ' + file.name + ' is incorrect, please select jpg or png.'
+			});
+		},
+		handleMaxSize (file) {
+			this.$Notice.warning({
+				title: 'Exceeding file size limit',
+				desc: 'File  ' + file.name + ' is too large, no more than 2M.'
+			});
+		},
+		async deleteImage(){
+			let image = this.data.iconImage
+			this.data.iconImage =''
+			this.$refs.uploads.clearFiles()
+			const res = await this.callApi('post','/app/delete_image',{imageName:image})
+			if(res.status!=200){
+				this.data.iconImage = image
+				this.swr()
+			}
+		},
 	},
 	async created() {
         this.token = window.Laravel.csrfToken
-		const res = await this.callApi('get','/app/get_tag');
-		// console.log(res);
+		const res = await this.callApi('get','/app/get_category');
 		if(res.status==200){
-			this.tags = res.data
+			this.categoryList = res.data
 		}else{
 			this.swr()
 		}
 	},
 }
 </script>
+<style scoped>
+	.demo-upload-list{
+        display: inline-block;
+        width: 60px;
+        height: 60px;
+        text-align: center;
+        line-height: 60px;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        overflow: hidden;
+        background: #fff;
+        position: relative;
+        box-shadow: 0 1px 1px rgba(0,0,0,.2);
+        margin-right: 4px;
+    }
+    .demo-upload-list img{
+        width: 100%;
+        height: 100%;
+    }
+    .demo-upload-list-cover{
+        display: none;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0,0,0,.6);
+    }
+    .demo-upload-list:hover .demo-upload-list-cover{
+        display: block;
+    }
+    .demo-upload-list-cover i{
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer;
+        margin: 0 2px;
+    }
+	.iconImage{
+		width: 100px;
+		height: 100px;
+	}
+</style>

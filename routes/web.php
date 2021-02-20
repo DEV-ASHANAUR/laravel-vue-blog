@@ -28,6 +28,7 @@ Route::post('app/edit_tag','Admin\tagController@editTag');
 Route::post('app/delete_tag','Admin\tagController@deleteTag');
 // =================category====================
 Route::post('app/cat_icon','Admin\CategoryController@upload');
-
-
+Route::post('app/delete_image','Admin\CategoryController@deleteImage');
+Route::post('app/create_category','Admin\CategoryController@store');
+Route::get('app/get_category','Admin\CategoryController@getCategory');
 

@@ -10,7 +10,7 @@
 						<table class="_table">
 								<!-- TABLE TITLE -->
 							<tr>
-								<th>Id</th>
+								<th>Si</th>
 								<th>Tag</th>
 								<th>Created at</th>
 								<th>Action</th>
@@ -19,7 +19,7 @@
 								<!-- ITEMS -->
 							<tr v-for="(tag,i) in tags" :key="i">
 								<td>{{ i+1 }}</td>
-								<td class="_table_name">{{ tag.tagName }}</td>
+								<td style="text-transform:capitalize">{{ tag.tagName }}</td>
 								<td>{{ tag.created_at }}</td>
 								<td>
 									<Button type="info" @click="showEditModal(tag,i)">Edit</Button>
