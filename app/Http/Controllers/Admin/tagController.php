@@ -27,7 +27,7 @@ class tagController extends Controller
     public function store(Request $request)
     {
         $this->validate($request,[
-            'tagName' => 'required'
+            'tagName' => 'required|unique:tags',
         ]);
         return Tag::create([
             'tagName' => $request->tagName,
@@ -44,6 +44,13 @@ class tagController extends Controller
         return Tag::where('id',$request->id)->update([
             'tagName' => $request->tagName
         ]);
+    }
+    public function deleteTag(Request $request)
+    {
+        $this->validate($request,[
+            'id' => 'required'
+        ]);
+        return Tag::where('id',$request->id)->delete();
     }
     
 }

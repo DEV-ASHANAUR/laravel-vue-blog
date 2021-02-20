@@ -23,7 +23,7 @@
 								<td>{{ tag.created_at }}</td>
 								<td>
 									<Button type="info" @click="showEditModal(tag,i)">Edit</Button>
-									<Button type="error">Delete</Button>
+									<Button type="error" @click="showDeletingModel(tag,i)" :loading="tag.isDeleting">Delete</Button>
 									
 								</td>
 							</tr>
@@ -58,6 +58,20 @@
 						</div>
 					</Modal>
 					<!-- tag edit model end -->
+					<!-- tag delete model start -->
+					<Modal v-model="showDeleteModel" width="360">
+						<p slot="header" style="color:#f60;text-align:center">
+							<Icon type="ios-information-circle"></Icon>
+							<span>Delete confirmation</span>
+						</p>
+						<div style="text-align:center">
+							<p>Are you sure! You Want to delete this tag? </p>
+						</div>
+						<div slot="footer">
+							<Button type="error" size="large" long :disabled="isDeleting" :loading="isDeleting" @click="deleteTag">Delete</Button>
+						</div>
+					</Modal>
+					<!-- tag delete model end -->
 				</div>
 			</div>
 		</div>
@@ -78,7 +92,11 @@ export default {
 			editModal: false,
 			isAdding : false,
 			tags: [],
-			index : -1
+			index : -1,
+			isDeleting:false,
+			showDeleteModel:false,
+			deletingIndex:-1,
+			deleteItem:{}
 		}	
 	},
 	methods : {
@@ -90,7 +108,7 @@ export default {
 			}else{
 				const res = await this.callApi('post','/app/create_tag',this.data)
 				if(res.status == 201){
-					this.s("Tag Save Successfully")
+					this.s("Tag has been Save Successfully")
 					this.tags.unshift(res.data)
 					this.data.tagName =''
 					this.isAdding = false
@@ -119,7 +137,7 @@ export default {
 				const res = await this.callApi('post','/app/edit_tag',this.editData)
 				if(res.status == 200){
 					this.tags[this.index].tagName = this.editData.tagName
-					this.s("Tag Edit Successfully")
+					this.s("Tag has been Edit Successfully")
 					this.isAdding = false
 					this.editModal = false
 
@@ -146,6 +164,25 @@ export default {
 			this.editModal = true
 			this.index = index
 
+		},
+		async deleteTag(){
+			// if(!confirm('Are you sure!you want to delete this tag?')) return
+			// this.$set(tag, 'isDeleting', true)
+			this.isDeleting = true
+			const res  = await this.callApi('post','/app/delete_tag',this.deleteItem)
+			if(res.status == 200){
+				this.tags.splice(this.deletingIndex,1)
+				this.s("Tag has been deleted successfully")
+			}else{
+				this.swr();
+			}
+			this.isDeleting = false
+			this.showDeleteModel = false
+		},
+		showDeletingModel(tag,i){
+			this.deleteItem = tag
+			this.deletingIndex = i
+			this.showDeleteModel = true
 		}
 	},
 	async created() {

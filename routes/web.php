@@ -25,6 +25,7 @@ Route::any('{slug}', function() {
 Route::post('app/create_tag','Admin\tagController@store');
 Route::get('app/get_tag','Admin\tagController@getTag');
 Route::post('app/edit_tag','Admin\tagController@editTag');
+Route::post('app/delete_tag','Admin\tagController@deleteTag');
 
 
 
