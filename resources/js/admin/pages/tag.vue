@@ -17,6 +17,10 @@
 							</tr>
 								<!-- TABLE TITLE -->
 								<!-- ITEMS -->
+							<tr v-if="preLoader">
+								<td colspan="4" style="text-align:center"><Button type="error" :loading="preLoader">Loading..</Button></td>
+							</tr>
+							
 							<tr v-for="(tag,i) in tags" :key="i">
 								<td>{{ i+1 }}</td>
 								<td style="text-transform:capitalize">{{ tag.tagName }}</td>
@@ -26,6 +30,9 @@
 									<Button type="error" @click="showDeletingModel(tag,i)" :loading="tag.isDeleting">Delete</Button>
 									
 								</td>
+							</tr>
+							<tr v-if="tags.length == 0 && !preLoader">
+								<td colspan="4" style="text-align:center">No data found!</td>
 							</tr>
 							<!-- ITEMS -->
 						</table>
@@ -96,7 +103,9 @@ export default {
 			isDeleting:false,
 			showDeleteModel:false,
 			deletingIndex:-1,
-			deleteItem:{}
+			deleteItem:{},
+			preLoader:false,
+
 		}	
 	},
 	methods : {
@@ -186,7 +195,9 @@ export default {
 		}
 	},
 	async created() {
+		this.preLoader = true
 		const res = await this.callApi('get','/app/get_tag');
+		this.preLoader = false
 		// console.log(res);
 		if(res.status==200){
 			this.tags = res.data

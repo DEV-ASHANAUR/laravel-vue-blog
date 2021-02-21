@@ -18,6 +18,9 @@
 							</tr>
 								<!-- TABLE TITLE -->
 								<!-- ITEMS -->
+							<tr v-if="preLoader">
+								<td colspan="5" style="text-align:center"><Button type="error" :loading="preLoader">Loading..</Button></td>
+							</tr>	
 							<tr v-for="(category,i) in categoryList" :key="i">
 								<td>{{ i+1 }}</td>
 								<td class="iconImage">
@@ -30,6 +33,9 @@
 									<Button type="error" @click="showDeletingModel(category,i)" :loading="category.isDeleting">Delete</Button>
 									
 								</td>
+							</tr>
+							<tr v-if="categoryList.length == 0 && !preLoader">
+								<td colspan="5" style="text-align:center">No data found!</td>
 							</tr>
 							<!-- ITEMS -->
 						</table>
@@ -126,7 +132,8 @@ export default {
 			showDeleteModel:false,
 			deletingIndex:-1,
 			deleteItem:{},
-            token:''
+            token:'',
+			preLoader:false,
 		}	
 	},
 	methods : {
@@ -259,8 +266,10 @@ export default {
 		},
 	},
 	async created() {
+		this.preLoader = true
         this.token = window.Laravel.csrfToken
 		const res = await this.callApi('get','/app/get_category');
+		this.preLoader = false
 		if(res.status==200){
 			this.categoryList = res.data
 		}else{

@@ -2036,6 +2036,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2055,7 +2061,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       showDeleteModel: false,
       deletingIndex: -1,
       deleteItem: {},
-      token: ''
+      token: '',
+      preLoader: false
     };
   },
   methods: {
@@ -2308,12 +2315,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         while (1) {
           switch (_context5.prev = _context5.next) {
             case 0:
+              _this5.preLoader = true;
               _this5.token = window.Laravel.csrfToken;
-              _context5.next = 3;
+              _context5.next = 4;
               return _this5.callApi('get', '/app/get_category');
 
-            case 3:
+            case 4:
               res = _context5.sent;
+              _this5.preLoader = false;
 
               if (res.status == 200) {
                 _this5.categoryList = res.data;
@@ -2321,7 +2330,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _this5.swr();
               }
 
-            case 5:
+            case 7:
             case "end":
               return _context5.stop();
           }
@@ -2430,6 +2439,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2447,7 +2463,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       isDeleting: false,
       showDeleteModel: false,
       deletingIndex: -1,
-      deleteItem: {}
+      deleteItem: {},
+      preLoader: false
     };
   },
   methods: {
@@ -2623,20 +2640,21 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         while (1) {
           switch (_context4.prev = _context4.next) {
             case 0:
-              _context4.next = 2;
+              _this4.preLoader = true;
+              _context4.next = 3;
               return _this4.callApi('get', '/app/get_tag');
 
-            case 2:
+            case 3:
               res = _context4.sent;
+              _this4.preLoader = false; // console.log(res);
 
-              // console.log(res);
               if (res.status == 200) {
                 _this4.tags = res.data;
               } else {
                 _this4.swr();
               }
 
-            case 4:
+            case 6:
             case "end":
               return _context4.stop();
           }
@@ -67682,6 +67700,28 @@ var render = function() {
                 [
                   _vm._m(0),
                   _vm._v(" "),
+                  _vm.preLoader
+                    ? _c("tr", [
+                        _c(
+                          "td",
+                          {
+                            staticStyle: { "text-align": "center" },
+                            attrs: { colspan: "5" }
+                          },
+                          [
+                            _c(
+                              "Button",
+                              {
+                                attrs: { type: "error", loading: _vm.preLoader }
+                              },
+                              [_vm._v("Loading..")]
+                            )
+                          ],
+                          1
+                        )
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
                   _vm._l(_vm.categoryList, function(category, i) {
                     return _c("tr", { key: i }, [
                       _c("td", [_vm._v(_vm._s(i + 1))]),
@@ -67733,7 +67773,20 @@ var render = function() {
                         1
                       )
                     ])
-                  })
+                  }),
+                  _vm._v(" "),
+                  _vm.categoryList.length == 0 && !_vm.preLoader
+                    ? _c("tr", [
+                        _c(
+                          "td",
+                          {
+                            staticStyle: { "text-align": "center" },
+                            attrs: { colspan: "5" }
+                          },
+                          [_vm._v("No data found!")]
+                        )
+                      ])
+                    : _vm._e()
                 ],
                 2
               )
@@ -68075,6 +68128,28 @@ var render = function() {
                 [
                   _vm._m(0),
                   _vm._v(" "),
+                  _vm.preLoader
+                    ? _c("tr", [
+                        _c(
+                          "td",
+                          {
+                            staticStyle: { "text-align": "center" },
+                            attrs: { colspan: "4" }
+                          },
+                          [
+                            _c(
+                              "Button",
+                              {
+                                attrs: { type: "error", loading: _vm.preLoader }
+                              },
+                              [_vm._v("Loading..")]
+                            )
+                          ],
+                          1
+                        )
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
                   _vm._l(_vm.tags, function(tag, i) {
                     return _c("tr", { key: i }, [
                       _c("td", [_vm._v(_vm._s(i + 1))]),
@@ -68119,7 +68194,20 @@ var render = function() {
                         1
                       )
                     ])
-                  })
+                  }),
+                  _vm._v(" "),
+                  _vm.tags.length == 0 && !_vm.preLoader
+                    ? _c("tr", [
+                        _c(
+                          "td",
+                          {
+                            staticStyle: { "text-align": "center" },
+                            attrs: { colspan: "4" }
+                          },
+                          [_vm._v("No data found!")]
+                        )
+                      ])
+                    : _vm._e()
                 ],
                 2
               )
