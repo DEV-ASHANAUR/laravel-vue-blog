@@ -2042,6 +2042,31 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2050,7 +2075,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         iconImage: ''
       },
       editData: {
-        tagName: ''
+        categoryName: '',
+        iconImage: ''
       },
       addModal: false,
       editModal: false,
@@ -2062,7 +2088,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       deletingIndex: -1,
       deleteItem: {},
       token: '',
-      preLoader: false
+      preLoader: false,
+      isIconImageNew: false,
+      isEditingItem: false
     };
   },
   methods: {
@@ -2140,7 +2168,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee);
       }))();
     },
-    EditTag: function EditTag() {
+    EditCategory: function EditCategory() {
       var _this2 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
@@ -2151,32 +2179,46 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 0:
                 _this2.isAdding = true;
 
-                if (!(_this2.editData.tagName.trim() == '')) {
-                  _context2.next = 6;
+                if (!(_this2.editData.categoryName.trim() == '')) {
+                  _context2.next = 4;
                   break;
                 }
 
                 _this2.isAdding = false;
-                return _context2.abrupt("return", _this2.e('Tag name is required'));
+                return _context2.abrupt("return", _this2.e('Category name is required'));
 
-              case 6:
-                _context2.next = 8;
-                return _this2.callApi('post', '/app/edit_tag', _this2.editData);
+              case 4:
+                if (!(_this2.editData.iconImage.trim() == '')) {
+                  _context2.next = 7;
+                  break;
+                }
 
-              case 8:
+                _this2.isAdding = false;
+                return _context2.abrupt("return", _this2.e('Icon Image is required'));
+
+              case 7:
+                _context2.next = 9;
+                return _this2.callApi('post', '/app/edit_category', _this2.editData);
+
+              case 9:
                 res = _context2.sent;
 
                 if (res.status == 200) {
-                  _this2.tags[_this2.index].tagName = _this2.editData.tagName;
+                  _this2.categoryList[_this2.index].categoryName = _this2.editData.categoryName;
 
-                  _this2.s("Tag has been Edit Successfully");
+                  _this2.s("Category has been Edit Successfully");
 
                   _this2.isAdding = false;
                   _this2.editModal = false;
+                  _this2.isEditingItem = false;
                 } else {
                   if (res.status == 422) {
-                    if (res.data.errors.tagName) {
-                      _this2.e(res.data.errors.tagName[0]);
+                    if (res.data.errors.categoryName) {
+                      _this2.e(res.data.errors.categoryName[0]);
+                    }
+
+                    if (res.data.errors.iconImage) {
+                      _this2.e(res.data.errors.iconImage[0]);
                     }
 
                     _this2.isAdding = false;
@@ -2187,7 +2229,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   }
                 }
 
-              case 10:
+              case 11:
               case "end":
                 return _context2.stop();
             }
@@ -2195,14 +2237,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee2);
       }))();
     },
-    showEditModal: function showEditModal(tag, index) {
-      var obj = {
-        id: tag.id,
-        tagName: tag.tagName
-      };
-      this.editData = obj;
+    showEditModal: function showEditModal(category, index) {
+      // let obj = {
+      // 	id : tag.id,
+      // 	tagName : tag.tagName
+      // }
+      this.editData = category;
       this.editModal = true;
       this.index = index;
+      this.isEditingItem = true;
     },
     deleteTag: function deleteTag() {
       var _this3 = this;
@@ -2247,7 +2290,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.showDeleteModel = true;
     },
     handleSuccess: function handleSuccess(res, file) {
-      this.data.iconImage = res;
+      if (this.isEditingItem) {
+        res = "/uploads/category/".concat(res);
+        this.editData.iconImage = res;
+      } else {
+        this.data.iconImage = res;
+      }
     },
     handleError: function handleError(res, file) {
       // console.log('res',res)
@@ -2304,38 +2352,79 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           }
         }, _callee4);
       }))();
+    },
+    deleteEditImage: function deleteEditImage() {
+      var _this5 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5() {
+        var image, res;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                _this5.isIconImageNew = true;
+                image = _this5.editData.iconImage;
+                _this5.editData.iconImage = '';
+
+                _this5.$refs.editDataUploads.clearFiles();
+
+                _context5.next = 6;
+                return _this5.callApi('post', '/app/delete_editimage', {
+                  imageName: image
+                });
+
+              case 6:
+                res = _context5.sent;
+
+                if (res.status != 200) {
+                  _this5.editData.iconImage = image;
+
+                  _this5.swr();
+                }
+
+              case 8:
+              case "end":
+                return _context5.stop();
+            }
+          }
+        }, _callee5);
+      }))();
+    },
+    closeEditModal: function closeEditModal() {
+      this.isEditingItem = false;
+      this.editModal = false;
     }
   },
   created: function created() {
-    var _this5 = this;
+    var _this6 = this;
 
-    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5() {
+    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee6() {
       var res;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee6$(_context6) {
         while (1) {
-          switch (_context5.prev = _context5.next) {
+          switch (_context6.prev = _context6.next) {
             case 0:
-              _this5.preLoader = true;
-              _this5.token = window.Laravel.csrfToken;
-              _context5.next = 4;
-              return _this5.callApi('get', '/app/get_category');
+              _this6.preLoader = true;
+              _this6.token = window.Laravel.csrfToken;
+              _context6.next = 4;
+              return _this6.callApi('get', '/app/get_category');
 
             case 4:
-              res = _context5.sent;
-              _this5.preLoader = false;
+              res = _context6.sent;
+              _this6.preLoader = false;
 
               if (res.status == 200) {
-                _this5.categoryList = res.data;
+                _this6.categoryList = res.data;
               } else {
-                _this5.swr();
+                _this6.swr();
               }
 
             case 7:
             case "end":
-              return _context5.stop();
+              return _context6.stop();
           }
         }
-      }, _callee5);
+      }, _callee6);
     }))();
   }
 });
@@ -67938,15 +68027,81 @@ var render = function() {
               },
               [
                 _c("Input", {
-                  attrs: { placeholder: "Enter tag name" },
+                  attrs: { placeholder: "Enter Category name" },
                   model: {
-                    value: _vm.editData.tagName,
+                    value: _vm.editData.categoryName,
                     callback: function($$v) {
-                      _vm.$set(_vm.editData, "tagName", $$v)
+                      _vm.$set(_vm.editData, "categoryName", $$v)
                     },
-                    expression: "editData.tagName"
+                    expression: "editData.categoryName"
                   }
                 }),
+                _vm._v(" "),
+                _c("div", { staticClass: "space" }),
+                _vm._v(" "),
+                _c(
+                  "Upload",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: _vm.isIconImageNew,
+                        expression: "isIconImageNew"
+                      }
+                    ],
+                    ref: "editDataUploads",
+                    attrs: {
+                      type: "drag",
+                      headers: {
+                        "x-csrf-token": _vm.token,
+                        "X-Requested-With": "XMLHttpRequest"
+                      },
+                      "on-success": _vm.handleSuccess,
+                      "on-error": _vm.handleError,
+                      format: ["jpg", "jpeg", "png"],
+                      "max-size": 2048,
+                      "on-format-error": _vm.handleFormatError,
+                      "on-exceeded-size": _vm.handleMaxSize,
+                      action: "/app/cat_icon"
+                    }
+                  },
+                  [
+                    _c(
+                      "div",
+                      { staticStyle: { padding: "20px 0" } },
+                      [
+                        _c("Icon", {
+                          staticStyle: { color: "#3399ff" },
+                          attrs: { type: "ios-cloud-upload", size: "52" }
+                        }),
+                        _vm._v(" "),
+                        _c("p", [_vm._v("Click or drag files here to upload")])
+                      ],
+                      1
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _vm.editData.iconImage
+                  ? _c("div", { staticClass: "demo-upload-list" }, [
+                      _c("img", {
+                        attrs: { src: "" + _vm.editData.iconImage }
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "demo-upload-list-cover" },
+                        [
+                          _c("Icon", {
+                            attrs: { type: "ios-trash-outline" },
+                            on: { click: _vm.deleteEditImage }
+                          })
+                        ],
+                        1
+                      )
+                    ])
+                  : _vm._e(),
                 _vm._v(" "),
                 _c(
                   "div",
@@ -67956,11 +68111,7 @@ var render = function() {
                       "Button",
                       {
                         attrs: { type: "default" },
-                        on: {
-                          click: function($event) {
-                            _vm.editModal = false
-                          }
-                        }
+                        on: { click: _vm.closeEditModal }
                       },
                       [_vm._v("Close")]
                     ),
@@ -67973,9 +68124,13 @@ var render = function() {
                           disabled: _vm.isAdding,
                           loading: _vm.isAdding
                         },
-                        on: { click: _vm.EditTag }
+                        on: { click: _vm.EditCategory }
                       },
-                      [_vm._v(_vm._s(_vm.isAdding ? "Saving.." : "Save Tag"))]
+                      [
+                        _vm._v(
+                          _vm._s(_vm.isAdding ? "Editing.." : "Edit Category")
+                        )
+                      ]
                     )
                   ],
                   1

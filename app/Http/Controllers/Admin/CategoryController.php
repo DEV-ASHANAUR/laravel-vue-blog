@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\CategoryRequest;
 use App\Category;
 
 class CategoryController extends Controller
@@ -30,6 +31,15 @@ class CategoryController extends Controller
         }
         return 'remove';
     }
+    public function deleteEditImage(Request $request)
+    {
+        $fileName = $request->imageName;
+        $filePath = public_path().$fileName;
+        if(file_exists($filePath)){
+            @unlink($filePath);
+        }
+        return 'remove';
+    }
     public function store(Request $request)
     {
         $this->validate($request,[
@@ -37,6 +47,13 @@ class CategoryController extends Controller
             'iconImage' => 'required',
         ]);
         return Category::create([
+            'categoryName' => $request->categoryName,
+            'iconImage' => $request->iconImage
+        ]);
+    }
+    public function editCategory(CategoryRequest $request)
+    {
+        return Category::where('id',$request->id)->update([
             'categoryName' => $request->categoryName,
             'iconImage' => $request->iconImage
         ]);
