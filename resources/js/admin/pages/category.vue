@@ -124,10 +124,10 @@
 							<span>Delete confirmation</span>
 						</p>
 						<div style="text-align:center">
-							<p>Are you sure! You Want to delete this tag? </p>
+							<p>Are you sure! You Want to delete this Category? </p>
 						</div>
 						<div slot="footer">
-							<Button type="error" size="large" long :disabled="isDeleting" :loading="isDeleting" @click="deleteTag">Delete</Button>
+							<Button type="error" size="large" long :disabled="isDeleting" :loading="isDeleting" @click="deleteCategory">Delete</Button>
 						</div>
 					</Modal>
 					<!-- tag delete model end -->
@@ -246,22 +246,22 @@ export default {
 			this.isEditingItem = true
 
 		},
-		async deleteTag(){
+		async deleteCategory(){
 			// if(!confirm('Are you sure!you want to delete this tag?')) return
 			// this.$set(tag, 'isDeleting', true)
 			this.isDeleting = true
-			const res  = await this.callApi('post','/app/delete_tag',this.deleteItem)
+			const res  = await this.callApi('post','/app/delete_category',this.deleteItem)
 			if(res.status == 200){
-				this.tags.splice(this.deletingIndex,1)
-				this.s("Tag has been deleted successfully")
+				this.categoryList.splice(this.deletingIndex,1)
+				this.s("Category has been deleted successfully")
 			}else{
 				this.swr();
 			}
 			this.isDeleting = false
 			this.showDeleteModel = false
 		},
-		showDeletingModel(tag,i){
-			this.deleteItem = tag
+		showDeletingModel(category,i){
+			this.deleteItem = category
 			this.deletingIndex = i
 			this.showDeleteModel = true
 		},

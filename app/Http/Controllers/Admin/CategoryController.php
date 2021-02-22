@@ -58,4 +58,16 @@ class CategoryController extends Controller
             'iconImage' => $request->iconImage
         ]);
     }
+    public function destroy(Request $request)
+    {
+        $category = Category::find($request->id);
+        if($category->delete()){
+            $fileName = $request->iconImage;
+            $filePath = public_path().$fileName;
+            if(file_exists($filePath)){
+                @unlink($filePath);
+            }
+        }
+        return response()->json('success');
+    }
 }
