@@ -20,6 +20,7 @@
             <ul class="_1side_menu_list_ul">
               
               <li><router-link to="/"><Icon type="ios-speedometer" /> Dashboard</router-link></li>
+              <li><router-link to="admin-user"><Icon type="ios-speedometer" /> AdminUser</router-link></li>
               <li><router-link to="tag"><Icon type="ios-speedometer" /> Tag</router-link></li>
               <li><router-link to="category"><Icon type="ios-speedometer" /> Category</router-link></li>
               <!-- <li><router-link to="category"><Icon type="ios-speedometer" /> Category</router-link></li>

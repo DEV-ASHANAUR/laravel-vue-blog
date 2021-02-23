@@ -21,7 +21,11 @@ Route::get('/', function () {
 Route::any('{slug}', function() {
     return view('welcome');
 });
-
+// ========================createUser===============
+Route::get('app/get_user_admin','Admin\UserController@getUser');
+Route::post('app/create_admin_user','Admin\UserController@store');
+Route::post('app/delete_user','Admin\UserController@destroy');
+// =========================tag================
 Route::post('app/create_tag','Admin\tagController@store');
 Route::get('app/get_tag','Admin\tagController@getTag');
 Route::post('app/edit_tag','Admin\tagController@editTag');

@@ -4,6 +4,7 @@ Vue.use(Router)
 import firstPage from './components/pages/firstVuePage.vue'
 import usecom from './vuex/usecom.vue'
 import home from './components/pages/home.vue'
+import adminUser from './admin/pages/adminUser.vue'
 import tag from './admin/pages/tag.vue'
 import category from './admin/pages/category.vue'
 const routes = [
@@ -11,6 +12,10 @@ const routes = [
     {
         path: '/',
         component: home
+    },
+    {
+        path: '/admin-user',
+        component: adminUser
     },
     {
         path: '/tag',
