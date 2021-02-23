@@ -24,6 +24,7 @@ Route::any('{slug}', function() {
 // ========================createUser===============
 Route::get('app/get_user_admin','Admin\UserController@getUser');
 Route::post('app/create_admin_user','Admin\UserController@store');
+Route::post('app/edit_admin_user','Admin\UserController@edit');
 Route::post('app/delete_user','Admin\UserController@destroy');
 // =========================tag================
 Route::post('app/create_tag','Admin\tagController@store');

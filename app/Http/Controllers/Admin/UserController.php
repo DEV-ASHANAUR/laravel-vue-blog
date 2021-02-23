@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\UserRequest;
 use App\User;
 
 class UserController extends Controller
@@ -27,6 +28,14 @@ class UserController extends Controller
             'password' => $password,
         ]);
         return $user;
+    }
+    public function edit(UserRequest $request)
+    {
+        $user = User::find($request->id);
+        $user->fullName = $request->fullName;
+        $user->email = $request->email;
+        $user->userType = $request->userType;
+        return $user->save();
     }
     public function destroy(Request $request)
     {

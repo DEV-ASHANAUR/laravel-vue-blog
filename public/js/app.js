@@ -2036,6 +2036,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2047,7 +2058,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         password_confirmation: ''
       },
       editData: {
-        tagName: ''
+        fullName: '',
+        email: '',
+        userType: ''
       },
       addModal: false,
       editModal: false,
@@ -2125,7 +2138,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 res = _context.sent;
 
                 if (res.status == 201) {
-                  _this.s("Admin has been Save Successfully");
+                  _this.s("Admin User has been Save Successfully");
 
                   _this.users.unshift(res.data);
 
@@ -2176,7 +2189,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee);
       }))();
     },
-    EditTag: function EditTag() {
+    EditAdmin: function EditAdmin() {
       var _this2 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
@@ -2187,32 +2200,60 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 0:
                 _this2.isAdding = true;
 
-                if (!(_this2.editData.tagName.trim() == '')) {
-                  _context2.next = 6;
+                if (!(_this2.editData.fullName.trim() == '')) {
+                  _context2.next = 4;
                   break;
                 }
 
                 _this2.isAdding = false;
-                return _context2.abrupt("return", _this2.e('Tag name is required'));
+                return _context2.abrupt("return", _this2.e('FullName is required'));
 
-              case 6:
-                _context2.next = 8;
-                return _this2.callApi('post', '/app/edit_tag', _this2.editData);
+              case 4:
+                if (!(_this2.editData.email.trim() == '')) {
+                  _context2.next = 7;
+                  break;
+                }
 
-              case 8:
+                _this2.isAdding = false;
+                return _context2.abrupt("return", _this2.e('Email is required'));
+
+              case 7:
+                if (!(_this2.editData.userType.trim() == '')) {
+                  _context2.next = 10;
+                  break;
+                }
+
+                _this2.isAdding = false;
+                return _context2.abrupt("return", _this2.e('UserType is required'));
+
+              case 10:
+                _context2.next = 12;
+                return _this2.callApi('post', '/app/edit_admin_user', _this2.editData);
+
+              case 12:
                 res = _context2.sent;
 
                 if (res.status == 200) {
-                  _this2.users[_this2.index].tagName = _this2.editData.tagName;
+                  _this2.users[_this2.index].fullName = _this2.editData.fullName;
+                  _this2.users[_this2.index].email = _this2.editData.email;
+                  _this2.users[_this2.index].userType = _this2.editData.userType;
 
-                  _this2.s("Tag has been Edit Successfully");
+                  _this2.s("Admin User has been Edit Successfully");
 
                   _this2.isAdding = false;
                   _this2.editModal = false;
                 } else {
                   if (res.status == 422) {
-                    if (res.data.errors.tagName) {
-                      _this2.e(res.data.errors.tagName[0]);
+                    if (res.data.errors.fullName) {
+                      _this2.e(res.data.errors.fullName[0]);
+                    }
+
+                    if (res.data.errors.email) {
+                      _this2.e(res.data.errors.email[0]);
+                    }
+
+                    if (res.data.errors.userType) {
+                      _this2.e(res.data.errors.userType[0]);
                     }
 
                     _this2.isAdding = false;
@@ -2223,7 +2264,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   }
                 }
 
-              case 10:
+              case 14:
               case "end":
                 return _context2.stop();
             }
@@ -2231,10 +2272,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee2);
       }))();
     },
-    showEditModal: function showEditModal(tag, index) {
+    showEditModal: function showEditModal(user, index) {
       var obj = {
-        id: tag.id,
-        tagName: tag.tagName
+        id: user.id,
+        fullName: user.fullName,
+        email: user.email,
+        userType: user.userType
       };
       this.editData = obj;
       this.editModal = true;
@@ -68517,7 +68560,7 @@ var render = function() {
                 attrs: {
                   "mask-closable": false,
                   closable: false,
-                  title: "Edit Tag"
+                  title: "Edit Admin"
                 },
                 model: {
                   value: _vm.editModal,
@@ -68528,16 +68571,75 @@ var render = function() {
                 }
               },
               [
-                _c("Input", {
-                  attrs: { placeholder: "Enter tag name" },
-                  model: {
-                    value: _vm.editData.tagName,
-                    callback: function($$v) {
-                      _vm.$set(_vm.editData, "tagName", $$v)
-                    },
-                    expression: "editData.tagName"
-                  }
-                }),
+                _c(
+                  "div",
+                  { staticClass: "space" },
+                  [
+                    _c("Input", {
+                      attrs: { type: "text", placeholder: "Enter Full Name" },
+                      model: {
+                        value: _vm.editData.fullName,
+                        callback: function($$v) {
+                          _vm.$set(_vm.editData, "fullName", $$v)
+                        },
+                        expression: "editData.fullName"
+                      }
+                    })
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "space" },
+                  [
+                    _c("Input", {
+                      attrs: {
+                        type: "email",
+                        placeholder: "Enter Email Address"
+                      },
+                      model: {
+                        value: _vm.editData.email,
+                        callback: function($$v) {
+                          _vm.$set(_vm.editData, "email", $$v)
+                        },
+                        expression: "editData.email"
+                      }
+                    })
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "space" },
+                  [
+                    _c(
+                      "Select",
+                      {
+                        attrs: { placeholder: "Selcet UserType" },
+                        model: {
+                          value: _vm.editData.userType,
+                          callback: function($$v) {
+                            _vm.$set(_vm.editData, "userType", $$v)
+                          },
+                          expression: "editData.userType"
+                        }
+                      },
+                      [
+                        _c("Option", { attrs: { value: "Admin" } }, [
+                          _vm._v("Admin")
+                        ]),
+                        _vm._v(" "),
+                        _c("Option", { attrs: { value: "Editor" } }, [
+                          _vm._v("Editor")
+                        ])
+                      ],
+                      1
+                    )
+                  ],
+                  1
+                ),
                 _vm._v(" "),
                 _c(
                   "div",
@@ -68564,15 +68666,14 @@ var render = function() {
                           disabled: _vm.isAdding,
                           loading: _vm.isAdding
                         },
-                        on: { click: _vm.EditTag }
+                        on: { click: _vm.EditAdmin }
                       },
-                      [_vm._v(_vm._s(_vm.isAdding ? "Saving.." : "Save Tag"))]
+                      [_vm._v(_vm._s(_vm.isAdding ? "Saving.." : "Save"))]
                     )
                   ],
                   1
                 )
-              ],
-              1
+              ]
             ),
             _vm._v(" "),
             _c(
