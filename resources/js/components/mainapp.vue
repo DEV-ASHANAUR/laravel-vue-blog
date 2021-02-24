@@ -1,6 +1,6 @@
 <template>
     <div>
-      <div v-if="isLoggedIn">
+      <div v-if="loggedInUser">
       <!--========== ADMIN SIDE MENU one ========-->
       <div class="_1side_menu" >
         <div class="_1side_menu_logo">
@@ -21,8 +21,10 @@
               
               <li><router-link to="/"><Icon type="ios-speedometer" /> Dashboard</router-link></li>
               <li><router-link to="admin-user"><Icon type="ios-speedometer" /> AdminUser</router-link></li>
+              <li><router-link to="role"><Icon type="ios-speedometer" /> Role Management</router-link></li>
               <li><router-link to="tag"><Icon type="ios-speedometer" /> Tag</router-link></li>
               <li><router-link to="category"><Icon type="ios-speedometer" /> Category</router-link></li>
+          
               <!-- <li><router-link to="category"><Icon type="ios-speedometer" /> Category</router-link></li>
               <li><router-link to="adminusers"><Icon type="ios-speedometer" /> Admin users</router-link></li>
               <li><router-link to="role"><Icon type="ios-speedometer" /> Role Management</router-link></li>
@@ -55,11 +57,22 @@
     </div>
 </template>
 <script>
+import {mapGetters} from 'vuex'
 export default {
+  props : ['user'],
   data(){
     return {
-        isLoggedIn: false
+        // isLoggedIn: false
     }
-  }
+  },
+  computed: {
+    ...mapGetters({
+      'loggedInUser' : 'getUser'
+    })
+  },
+  created() {
+    this.$store.commit('updateUser',this.user)
+    // console.log('user',this.loggedInUser);
+  },
 }
 </script>

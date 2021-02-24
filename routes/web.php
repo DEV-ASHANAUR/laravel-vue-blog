@@ -14,13 +14,10 @@ use Illuminate\Support\Facades\Route;
 */
 Route::post('app/create_tag','testController@index');
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/','Admin\loginController@index');
+Route::get('/logout','Admin\loginController@logout');
 
-Route::any('{slug}', function() {
-    return view('welcome');
-});
+Route::any('{slug}', 'Admin\loginController@index');
 //======================admin login=================
 Route::post('app/admin_login','Admin\loginController@adminLogin');
 // ========================createUser===============
@@ -41,3 +38,8 @@ Route::get('app/get_category','Admin\CategoryController@getCategory');
 Route::post('app/delete_editimage','Admin\CategoryController@deleteEditImage');
 Route::post('app/edit_category','Admin\CategoryController@editCategory');
 Route::post('app/delete_category','Admin\CategoryController@destroy');
+// =====================role======================
+Route::get('app/get_role','Admin\RoleController@getRole');
+Route::post('app/create_role','Admin\RoleController@store');
+Route::post('app/edit_role','Admin\RoleController@edit');
+Route::post('app/delete_role','Admin\RoleController@destroy');

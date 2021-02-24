@@ -8,6 +8,28 @@ use Illuminate\Support\Facades\Auth;
 
 class loginController extends Controller
 {
+    public function index(Request $request)
+    {
+        if(!Auth::check() && $request->path() != 'login'){
+            return redirect('/login');
+        }
+        if(!Auth::check() && $request->path() == 'login'){
+            return view('welcome');
+        }
+
+        $user = Auth::user();
+        if($user->userType == 'User'){
+            return redirect('/login');
+        }
+        if($request->path() == 'login'){
+            return redirect('/');
+        }
+        return view('welcome');
+    }
+    public function logout(){
+        Auth::logout();
+        return redirect('/login');
+    }
     public function adminLogin(Request $request)
     {
         $this->validate($request,[
