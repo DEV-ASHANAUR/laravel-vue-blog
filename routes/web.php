@@ -21,6 +21,8 @@ Route::get('/', function () {
 Route::any('{slug}', function() {
     return view('welcome');
 });
+//======================admin login=================
+Route::post('app/admin_login','Admin\loginController@adminLogin');
 // ========================createUser===============
 Route::get('app/get_user_admin','Admin\UserController@getUser');
 Route::post('app/create_admin_user','Admin\UserController@store');

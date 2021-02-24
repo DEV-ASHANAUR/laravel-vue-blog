@@ -7,6 +7,7 @@ import home from './components/pages/home.vue'
 import adminUser from './admin/pages/adminUser.vue'
 import tag from './admin/pages/tag.vue'
 import category from './admin/pages/category.vue'
+import login from './admin/pages/login.vue'
 const routes = [
     
     {
@@ -24,6 +25,10 @@ const routes = [
     {
         path: '/category',
         component: category
+    },
+    {
+        path: '/login',
+        component: login
     },
     {
         path: '/test-vuex',

@@ -11,14 +11,14 @@ class UserController extends Controller
 {
     public function getUser()
     {
-        return User::orderBy('id','desc')->get();
+        return User::where('userType','!=','User')->orderBy('id','desc')->get();
     }
     public function store(Request $request){
         $this->validate($request,[
             'fullName' => 'required|min:3',
             'email' => 'required|email|unique:users',
             'userType' => 'required',
-            'password' => 'required|confirmed|min:8',
+            'password' => 'required|confirmed|min:6',
         ]);
         $password = bcrypt($request->password);
         $user = User::create([
