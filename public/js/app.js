@@ -1924,11 +1924,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 
 
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-//
 //
 //
 //
@@ -2053,19 +2064,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       data: {
         fullName: '',
         email: '',
-        userType: '',
+        role_id: null,
         password: '',
         password_confirmation: ''
       },
       editData: {
         fullName: '',
         email: '',
-        userType: ''
+        role_id: ''
       },
       addModal: false,
       editModal: false,
       isAdding: false,
       users: [],
+      roles: [],
       index: -1,
       isDeleting: false,
       showDeleteModel: false,
@@ -2104,13 +2116,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 return _context.abrupt("return", _this.e('Email is required'));
 
               case 7:
-                if (!(_this.data.userType.trim() == '')) {
+                if (!(_this.data.role_id == null)) {
                   _context.next = 10;
                   break;
                 }
 
                 _this.isAdding = false;
-                return _context.abrupt("return", _this.e('UserType is required'));
+                return _context.abrupt("return", _this.e('Role is required'));
 
               case 10:
                 if (!(_this.data.password.trim() == '')) {
@@ -2136,16 +2148,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               case 18:
                 res = _context.sent;
+                _this.isAdding = false;
 
                 if (res.status == 201) {
-                  _this.s("Admin User has been Save Successfully");
+                  _this.s("Admin User Save Successfully");
 
-                  _this.users.unshift(res.data);
+                  console.log(res.data);
+
+                  _this.users.unshift(res.data.user);
 
                   _this.data = {
                     fullName: '',
                     email: '',
-                    userType: '',
+                    role_id: '',
                     password: '',
                     password_confirmation: ''
                   };
@@ -2161,8 +2176,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                       _this.e(res.data.errors.email[0]);
                     }
 
-                    if (res.data.errors.userType) {
-                      _this.e(res.data.errors.userType[0]);
+                    if (res.data.errors.role_id) {
+                      _this.e(res.data.errors.role_id[0]);
                     }
 
                     if (res.data.errors.password) {
@@ -2181,7 +2196,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   }
                 }
 
-              case 20:
+                _this.isAdding = false;
+
+              case 22:
               case "end":
                 return _context.stop();
             }
@@ -2218,7 +2235,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 return _context2.abrupt("return", _this2.e('Email is required'));
 
               case 7:
-                if (!(_this2.editData.userType.trim() == '')) {
+                if (!(_this2.editData.role_id == null)) {
                   _context2.next = 10;
                   break;
                 }
@@ -2236,9 +2253,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 if (res.status == 200) {
                   _this2.users[_this2.index].fullName = _this2.editData.fullName;
                   _this2.users[_this2.index].email = _this2.editData.email;
-                  _this2.users[_this2.index].userType = _this2.editData.userType;
 
-                  _this2.s("Admin User has been Edit Successfully");
+                  _this2.s("Admin User Edit Successfully");
 
                   _this2.isAdding = false;
                   _this2.editModal = false;
@@ -2252,8 +2268,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                       _this2.e(res.data.errors.email[0]);
                     }
 
-                    if (res.data.errors.userType) {
-                      _this2.e(res.data.errors.userType[0]);
+                    if (res.data.errors.role_id) {
+                      _this2.e(res.data.errors.role_id[0]);
                     }
 
                     _this2.isAdding = false;
@@ -2277,7 +2293,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         id: user.id,
         fullName: user.fullName,
         email: user.email,
-        userType: user.userType
+        role_id: user.role_id
       };
       this.editData = obj;
       this.editModal = true;
@@ -2304,7 +2320,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 if (res.status == 200) {
                   _this3.users.splice(_this3.deletingIndex, 1);
 
-                  _this3.s("Admin User has been deleted successfully");
+                  _this3.s("Admin User deleted successfully");
                 } else {
                   _this3.swr();
                 }
@@ -2330,26 +2346,37 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     var _this4 = this;
 
     return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
-      var res;
+      var _yield$Promise$all, _yield$Promise$all2, res, resRole;
+
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
             case 0:
               _this4.preLoader = true;
               _context4.next = 3;
-              return _this4.callApi('get', '/app/get_user_admin');
+              return Promise.all([_this4.callApi('get', '/app/get_user_admin'), _this4.callApi('get', '/app/get_role')]);
 
             case 3:
-              res = _context4.sent;
-              _this4.preLoader = false; // console.log(res);
+              _yield$Promise$all = _context4.sent;
+              _yield$Promise$all2 = _slicedToArray(_yield$Promise$all, 2);
+              res = _yield$Promise$all2[0];
+              resRole = _yield$Promise$all2[1];
+              _this4.preLoader = false; // response user data
 
               if (res.status == 200) {
                 _this4.users = res.data;
               } else {
                 _this4.swr();
+              } // response roles data
+
+
+              if (res.status == 200) {
+                _this4.roles = resRole.data;
+              } else {
+                _this4.swr();
               }
 
-            case 6:
+            case 10:
             case "end":
               return _context4.stop();
           }
@@ -68919,7 +68946,7 @@ var render = function() {
                       _vm._v(" "),
                       _c("td", [_vm._v(_vm._s(user.email))]),
                       _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(user.userType))]),
+                      _c("td", [_vm._v(_vm._s(user.role.roleName))]),
                       _vm._v(" "),
                       _c("td", [_vm._v(_vm._s(user.created_at))]),
                       _vm._v(" "),
@@ -68966,7 +68993,7 @@ var render = function() {
                           "td",
                           {
                             staticStyle: { "text-align": "center" },
-                            attrs: { colspan: "4" }
+                            attrs: { colspan: "6" }
                           },
                           [_vm._v("No data found!")]
                         )
@@ -69042,22 +69069,20 @@ var render = function() {
                       {
                         attrs: { placeholder: "Selcet UserType" },
                         model: {
-                          value: _vm.data.userType,
+                          value: _vm.data.role_id,
                           callback: function($$v) {
-                            _vm.$set(_vm.data, "userType", $$v)
+                            _vm.$set(_vm.data, "role_id", $$v)
                           },
-                          expression: "data.userType"
+                          expression: "data.role_id"
                         }
                       },
-                      [
-                        _c("Option", { attrs: { value: "Admin" } }, [
-                          _vm._v("Admin")
-                        ]),
-                        _vm._v(" "),
-                        _c("Option", { attrs: { value: "Editor" } }, [
-                          _vm._v("Editor")
-                        ])
-                      ],
+                      _vm._l(_vm.roles, function(r, i) {
+                        return _c(
+                          "Option",
+                          { key: i, attrs: { value: r.id } },
+                          [_vm._v(_vm._s(r.roleName))]
+                        )
+                      }),
                       1
                     )
                   ],
@@ -69206,22 +69231,20 @@ var render = function() {
                       {
                         attrs: { placeholder: "Selcet UserType" },
                         model: {
-                          value: _vm.editData.userType,
+                          value: _vm.editData.role_id,
                           callback: function($$v) {
-                            _vm.$set(_vm.editData, "userType", $$v)
+                            _vm.$set(_vm.editData, "role_id", $$v)
                           },
-                          expression: "editData.userType"
+                          expression: "editData.role_id"
                         }
                       },
-                      [
-                        _c("Option", { attrs: { value: "Admin" } }, [
-                          _vm._v("Admin")
-                        ]),
-                        _vm._v(" "),
-                        _c("Option", { attrs: { value: "Editor" } }, [
-                          _vm._v("Editor")
-                        ])
-                      ],
+                      _vm._l(_vm.roles, function(r, i) {
+                        return _c(
+                          "Option",
+                          { key: i, attrs: { value: r.id } },
+                          [_vm._v(_vm._s(r.roleName))]
+                        )
+                      }),
                       1
                     )
                   ],
@@ -70768,7 +70791,19 @@ var render = function() {
                         )
                       ],
                       1
-                    )
+                    ),
+                    _vm._v(" "),
+                    _c("li", [
+                      _c(
+                        "a",
+                        { attrs: { href: "/logout" } },
+                        [
+                          _c("Icon", { attrs: { type: "ios-speedometer" } }),
+                          _vm._v(" Logout")
+                        ],
+                        1
+                      )
+                    ])
                   ])
                 ])
               ])

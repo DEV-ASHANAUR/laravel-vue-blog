@@ -30,7 +30,7 @@ class UserRequest extends FormRequest
         }
         return [
             'fullName' => 'required',
-            'userType' => 'required',
+            'role_id' => 'required',
             'id' => 'required'
         ];
     }

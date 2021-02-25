@@ -27,7 +27,7 @@
 								<td>{{ i+1 }}</td>
 								<td style="text-transform:capitalize">{{ user.fullName }}</td>
                                 <td>{{ user.email }}</td>
-                                <td>{{ user.userType }}</td>
+                                <td>{{ user.role.roleName }}</td>
 								<td>{{ user.created_at }}</td>
 								<td>
 									<Button type="info" @click="showEditModal(user,i)">Edit</Button>
@@ -36,7 +36,7 @@
 								</td>
 							</tr>
 							<tr v-if="users.length == 0 && !preLoader">
-								<td colspan="4" style="text-align:center">No data found!</td>
+								<td colspan="6" style="text-align:center">No data found!</td>
 							</tr>
 							<!-- ITEMS -->
 						</table>
@@ -55,9 +55,9 @@
                             <Input type="email" v-model="data.email" placeholder="Enter Email Address" />
                         </div>
                         <div class="space">
-                            <Select v-model="data.userType" placeholder="Selcet UserType">
-                                <Option value="Admin">Admin</Option>
-                                <Option value="Editor">Editor</Option>
+                            <Select v-model="data.role_id" placeholder="Selcet UserType">
+                                <Option :value="r.id" v-for="(r,i) in roles" :key="i">{{ r.roleName }}</Option>
+                                
                             </Select>
                         </div>
                         <div class="space">
@@ -86,9 +86,8 @@
                             <Input type="email" v-model="editData.email" placeholder="Enter Email Address" />
                         </div>
                         <div class="space">
-                            <Select v-model="editData.userType" placeholder="Selcet UserType">
-                                <Option value="Admin">Admin</Option>
-                                <Option value="Editor">Editor</Option>
+                            <Select v-model="editData.role_id" placeholder="Selcet UserType">
+                                <Option :value="r.id" v-for="(r,i) in roles" :key="i">{{ r.roleName }}</Option>
                             </Select>
                         </div>
 						<div slot="footer">
@@ -124,19 +123,20 @@ export default {
 			data:{
 				fullName: '',
                 email: '',
-                userType: '',
+                role_id: null,
                 password: '',
                 password_confirmation: ''
 			},
 			editData:{
 				fullName: '',
                 email: '',
-                userType: '',
+                role_id: '',
 			},
 			addModal : false,
 			editModal: false,
 			isAdding : false,
 			users: [],
+			roles: [],
 			index : -1,
 			isDeleting:false,
 			showDeleteModel:false,
@@ -157,9 +157,9 @@ export default {
 				this.isAdding = false
 				return this.e('Email is required');
 			}
-            if(this.data.userType.trim()==''){
+            if(this.data.role_id==null){
 				this.isAdding = false
-				return this.e('UserType is required');
+				return this.e('Role is required');
 			}
             if(this.data.password.trim()==''){
 				this.isAdding = false
@@ -170,13 +170,15 @@ export default {
 				return this.e('Confirm Password is required');
 			}
             const res = await this.callApi('post','/app/create_admin_user',this.data)
+			this.isAdding = false
             if(res.status == 201){
-                this.s("Admin User has been Save Successfully")
-                this.users.unshift(res.data)
+                this.s("Admin User Save Successfully")
+				console.log(res.data);
+                this.users.unshift(res.data.user)
                 this.data = {
                     fullName: '',
                     email: '',
-                    userType: '',
+                    role_id: '',
                     password: '',
                     password_confirmation: ''
                 }
@@ -191,8 +193,8 @@ export default {
                     if(res.data.errors.email){
                         this.e(res.data.errors.email[0])
                     }
-                    if(res.data.errors.userType){
-                        this.e(res.data.errors.userType[0])
+                    if(res.data.errors.role_id){
+                        this.e(res.data.errors.role_id[0])
                     }
                     if(res.data.errors.password){
                         this.e(res.data.errors.password[0])
@@ -207,6 +209,7 @@ export default {
                 }
                 
             }
+			this.isAdding = false
 		},
 		async EditAdmin(){
 			this.isAdding = true
@@ -218,7 +221,7 @@ export default {
 				this.isAdding = false
 				return this.e('Email is required');
 			}
-            if(this.editData.userType.trim()==''){
+            if(this.editData.role_id==null){
 				this.isAdding = false
 				return this.e('UserType is required');
 			}
@@ -226,8 +229,7 @@ export default {
 			if(res.status == 200){
 				this.users[this.index].fullName = this.editData.fullName
 				this.users[this.index].email = this.editData.email
-				this.users[this.index].userType = this.editData.userType
-				this.s("Admin User has been Edit Successfully")
+				this.s("Admin User Edit Successfully")
 				this.isAdding = false
 				this.editModal = false
 
@@ -239,8 +241,8 @@ export default {
                     if(res.data.errors.email){
                         this.e(res.data.errors.email[0])
                     }
-                    if(res.data.errors.userType){
-                        this.e(res.data.errors.userType[0])
+                    if(res.data.errors.role_id){
+                        this.e(res.data.errors.role_id[0])
                     }
 					this.isAdding = false
 				}else{
@@ -255,7 +257,7 @@ export default {
 				id : user.id,
 				fullName : user.fullName,
 				email : user.email,
-				userType : user.userType,
+				role_id : user.role_id,
 			}
 			this.editData = obj
 			this.editModal = true
@@ -269,7 +271,7 @@ export default {
 			const res  = await this.callApi('post','/app/delete_user',this.deleteItem)
 			if(res.status == 200){
 				this.users.splice(this.deletingIndex,1)
-				this.s("Admin User has been deleted successfully")
+				this.s("Admin User deleted successfully")
 			}else{
 				this.swr();
 			}
@@ -284,11 +286,20 @@ export default {
 	},
 	async created() {
 		this.preLoader = true
-		const res = await this.callApi('get','/app/get_user_admin');
+		const [res,resRole] = await Promise.all([
+			this.callApi('get','/app/get_user_admin'),
+			this.callApi('get','/app/get_role')
+		])
 		this.preLoader = false
-		// console.log(res);
+		// response user data
 		if(res.status==200){
 			this.users = res.data
+		}else{
+			this.swr()
+		}
+		// response roles data
+		if(res.status==200){
+			this.roles = resRole.data
 		}else{
 			this.swr()
 		}

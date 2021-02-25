@@ -39,7 +39,7 @@ class loginController extends Controller
 
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){
             $user = Auth::user();
-            if($user->userType == 'User'){
+            if($user->role->isAdmin == '0'){
                 Auth::logout();
                 return response()->json([
                     'msg' => 'Incorrect login details'

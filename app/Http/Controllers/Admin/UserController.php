@@ -11,30 +11,33 @@ class UserController extends Controller
 {
     public function getUser()
     {
-        return User::where('userType','!=','User')->orderBy('id','desc')->get();
+        return User::with('role')->orderBy('id','desc')->get();
     }
     public function store(Request $request){
         $this->validate($request,[
             'fullName' => 'required|min:3',
             'email' => 'required|email|unique:users',
-            'userType' => 'required',
+            'role_id' => 'required',
             'password' => 'required|confirmed|min:6',
         ]);
         $password = bcrypt($request->password);
         $user = User::create([
             'fullName' => $request->fullName,
             'email' => $request->email,
-            'userType' => $request->userType,
+            'role_id' => $request->role_id,
             'password' => $password,
         ]);
-        return $user;
+        $get_user =  User::where('id',$user->id)->with('role')->first();
+        return response()->json([
+            'user' => $get_user,
+        ],201);
     }
     public function edit(UserRequest $request)
     {
         $user = User::find($request->id);
         $user->fullName = $request->fullName;
         $user->email = $request->email;
-        $user->userType = $request->userType;
+        $user->role_id = $request->role_id;
         return $user->save();
     }
     public function destroy(Request $request)
