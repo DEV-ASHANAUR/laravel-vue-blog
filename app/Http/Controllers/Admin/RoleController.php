@@ -30,4 +30,14 @@ class RoleController extends Controller
         $role = Role::find($request->id);
         return $role->delete();
     }
+    public function assignRole(Request $request){
+        $this->validate($request,[
+            'permission' => 'required',
+            'id' => 'required'
+        ]);
+        return Role::where('id',$request->id)->update([
+            'permission' => $request->permission,
+        ]);
+
+    }
 }

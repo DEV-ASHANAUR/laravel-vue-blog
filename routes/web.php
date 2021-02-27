@@ -45,4 +45,5 @@ Route::prefix('app')->middleware([AdminCheck::class])->group(function(){
     Route::post('/create_role','Admin\RoleController@store');
     Route::post('/edit_role','Admin\RoleController@edit');
     Route::post('/delete_role','Admin\RoleController@destroy');
+    Route::post('/assign_roles','Admin\RoleController@assignRole');
 });    

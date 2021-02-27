@@ -23,8 +23,8 @@ export default {
     data(){
         return {
             data : {
-                email: '',
-                password: ''
+                email: 'ashanour009@gmail.com',
+                password: '12345678'
             },
             islogging: false
         }

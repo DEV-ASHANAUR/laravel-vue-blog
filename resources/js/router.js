@@ -6,6 +6,7 @@ import usecom from './vuex/usecom.vue'
 import home from './components/pages/home.vue'
 import adminUser from './admin/pages/adminUser.vue'
 import role from './admin/pages/role.vue'
+import assignRole from './admin/pages/assignRole.vue'
 import tag from './admin/pages/tag.vue'
 import category from './admin/pages/category.vue'
 import login from './admin/pages/login.vue'
@@ -13,23 +14,33 @@ const routes = [
     
     {
         path: '/',
-        component: home
+        component: home,
+        name: 'home'
     },
     {
         path: '/role',
-        component: role
+        component: role,
+        name: 'role'
+    },
+    {
+        path: '/assignRole',
+        component: assignRole,
+        name: 'assignRole'
     },
     {
         path: '/admin-user',
-        component: adminUser
+        component: adminUser,
+        name: 'adminUser'
     },
     {
         path: '/tag',
-        component: tag
+        component: tag,
+        name: 'tag'
     },
     {
         path: '/category',
-        component: category
+        component: category,
+        name: 'category'
     },
     {
         path: '/login',
