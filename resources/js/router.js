@@ -15,7 +15,7 @@ const routes = [
     {
         path: '/',
         component: home,
-        name: 'home'
+        name: '/'
     },
     {
         path: '/role',
@@ -28,7 +28,7 @@ const routes = [
         name: 'assignRole'
     },
     {
-        path: '/admin-user',
+        path: '/adminUser',
         component: adminUser,
         name: 'adminUser'
     },

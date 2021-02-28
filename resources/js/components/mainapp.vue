@@ -19,12 +19,14 @@
           <div class="_1side_menu_list">
             <ul class="_1side_menu_list_ul">
               
-              <li><router-link to="/"><Icon type="ios-speedometer" /> Dashboard</router-link></li>
-              <li><router-link to="role"><Icon type="ios-speedometer" /> Role Management</router-link></li>
+              <li v-for="(menuItem,i) in permission" :key="i" v-if="permission.length && menuItem.read">
+                <router-link :to="menuItem.name"><Icon type="ios-speedometer" /> {{ menuItem.resourceName }}</router-link>
+              </li>
+              <!-- <li><router-link to="role"><Icon type="ios-speedometer" /> Role Management</router-link></li>
               <li><router-link to="assignRole"><Icon type="ios-speedometer" /> Assign Role</router-link></li>
-              <li><router-link to="admin-user"><Icon type="ios-speedometer" /> AdminUser</router-link></li>
+              <li><router-link to="adminUser"><Icon type="ios-speedometer" /> AdminUser</router-link></li>
               <li><router-link to="tag"><Icon type="ios-speedometer" /> Tag</router-link></li>
-              <li><router-link to="category"><Icon type="ios-speedometer" /> Category</router-link></li>
+              <li><router-link to="category"><Icon type="ios-speedometer" /> Category</router-link></li> -->
               <li><a href="/logout"><Icon type="ios-speedometer" /> Logout</a></li>
               <!-- <li><router-link to="category"><Icon type="ios-speedometer" /> Category</router-link></li>
               <li><router-link to="adminusers"><Icon type="ios-speedometer" /> Admin users</router-link></li>
@@ -60,7 +62,7 @@
 <script>
 import {mapGetters} from 'vuex'
 export default {
-  props : ['user'],
+  props : ['user','permission'],
   data(){
     return {
         // isLoggedIn: false
@@ -73,7 +75,7 @@ export default {
   },
   created() {
     this.$store.commit('updateUser',this.user)
-    // console.log('user',this.loggedInUser);
+    console.log(this.permission);
   },
 }
 </script>

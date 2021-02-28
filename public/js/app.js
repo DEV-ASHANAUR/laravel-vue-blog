@@ -2462,7 +2462,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         write: false,
         update: false,
         "delete": false,
-        name: 'home'
+        name: '/'
       }, {
         resourceName: 'Role',
         read: false,
@@ -2505,7 +2505,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         write: false,
         update: false,
         "delete": false,
-        name: 'home'
+        name: '/'
       }, {
         resourceName: 'Role',
         read: false,
@@ -2555,18 +2555,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
+                _this.isSending = true;
                 data = JSON.stringify(_this.resources);
-                _context.next = 3;
+                _context.next = 4;
                 return _this.callApi('post', 'app/assign_roles', {
                   'permission': data,
                   'id': _this.data.id
                 });
 
-              case 3:
+              case 4:
                 res = _context.sent;
 
                 if (res.status == 200) {
-                  _this.s("Roles has been Assign Successfully");
+                  _this.s("Permission Assign Successfully");
 
                   index = _this.roles.findIndex(function (role) {
                     return role.id == _this.data.id;
@@ -2576,7 +2577,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this.swr();
                 }
 
-              case 5:
+                _this.isSending = false;
+
+              case 7:
               case "end":
                 return _context.stop();
             }
@@ -4006,9 +4009,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['user'],
+  props: ['user', 'permission'],
   data: function data() {
     return {// isLoggedIn: false
     };
@@ -4017,7 +4022,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     'loggedInUser': 'getUser'
   })),
   created: function created() {
-    this.$store.commit('updateUser', this.user); // console.log('user',this.loggedInUser);
+    this.$store.commit('updateUser', this.user);
+    console.log(this.permission);
   }
 });
 
@@ -71168,115 +71174,47 @@ var render = function() {
                 _vm._m(1),
                 _vm._v(" "),
                 _c("div", { staticClass: "_1side_menu_list" }, [
-                  _c("ul", { staticClass: "_1side_menu_list_ul" }, [
-                    _c(
-                      "li",
-                      [
+                  _c(
+                    "ul",
+                    { staticClass: "_1side_menu_list_ul" },
+                    [
+                      _vm._l(_vm.permission, function(menuItem, i) {
+                        return _vm.permission.length && menuItem.read
+                          ? _c(
+                              "li",
+                              { key: i },
+                              [
+                                _c(
+                                  "router-link",
+                                  { attrs: { to: menuItem.name } },
+                                  [
+                                    _c("Icon", {
+                                      attrs: { type: "ios-speedometer" }
+                                    }),
+                                    _vm._v(" " + _vm._s(menuItem.resourceName))
+                                  ],
+                                  1
+                                )
+                              ],
+                              1
+                            )
+                          : _vm._e()
+                      }),
+                      _vm._v(" "),
+                      _c("li", [
                         _c(
-                          "router-link",
-                          { attrs: { to: "/" } },
+                          "a",
+                          { attrs: { href: "/logout" } },
                           [
                             _c("Icon", { attrs: { type: "ios-speedometer" } }),
-                            _vm._v(" Dashboard")
+                            _vm._v(" Logout")
                           ],
                           1
                         )
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "li",
-                      [
-                        _c(
-                          "router-link",
-                          { attrs: { to: "role" } },
-                          [
-                            _c("Icon", { attrs: { type: "ios-speedometer" } }),
-                            _vm._v(" Role Management")
-                          ],
-                          1
-                        )
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "li",
-                      [
-                        _c(
-                          "router-link",
-                          { attrs: { to: "assignRole" } },
-                          [
-                            _c("Icon", { attrs: { type: "ios-speedometer" } }),
-                            _vm._v(" Assign Role")
-                          ],
-                          1
-                        )
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "li",
-                      [
-                        _c(
-                          "router-link",
-                          { attrs: { to: "admin-user" } },
-                          [
-                            _c("Icon", { attrs: { type: "ios-speedometer" } }),
-                            _vm._v(" AdminUser")
-                          ],
-                          1
-                        )
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "li",
-                      [
-                        _c(
-                          "router-link",
-                          { attrs: { to: "tag" } },
-                          [
-                            _c("Icon", { attrs: { type: "ios-speedometer" } }),
-                            _vm._v(" Tag")
-                          ],
-                          1
-                        )
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "li",
-                      [
-                        _c(
-                          "router-link",
-                          { attrs: { to: "category" } },
-                          [
-                            _c("Icon", { attrs: { type: "ios-speedometer" } }),
-                            _vm._v(" Category")
-                          ],
-                          1
-                        )
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c("li", [
-                      _c(
-                        "a",
-                        { attrs: { href: "/logout" } },
-                        [
-                          _c("Icon", { attrs: { type: "ios-speedometer" } }),
-                          _vm._v(" Logout")
-                        ],
-                        1
-                      )
-                    ])
-                  ])
+                      ])
+                    ],
+                    2
+                  )
                 ])
               ])
             ]),
@@ -89381,7 +89319,7 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODU
 var routes = [{
   path: '/',
   component: _components_pages_home_vue__WEBPACK_IMPORTED_MODULE_4__["default"],
-  name: 'home'
+  name: '/'
 }, {
   path: '/role',
   component: _admin_pages_role_vue__WEBPACK_IMPORTED_MODULE_6__["default"],
@@ -89391,7 +89329,7 @@ var routes = [{
   component: _admin_pages_assignRole_vue__WEBPACK_IMPORTED_MODULE_7__["default"],
   name: 'assignRole'
 }, {
-  path: '/admin-user',
+  path: '/adminUser',
   component: _admin_pages_adminUser_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
   name: 'adminUser'
 }, {

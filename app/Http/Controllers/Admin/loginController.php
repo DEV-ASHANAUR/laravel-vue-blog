@@ -24,7 +24,28 @@ class loginController extends Controller
         if($request->path() == 'login'){
             return redirect('/');
         }
-        return view('welcome');
+        // return view('welcome');
+        return $this->checkForPermission($user,$request);
+        
+    }
+    public function checkForPermission($user,$request)
+    {
+        $permission =  json_decode($user->role->permission);
+        $hasPermission = false;
+        if(!$permission) return view('welcome');
+        foreach($permission as $p){
+            if($p->name == $request->path()){
+                if($p->read){
+                    $hasPermission = true;
+                }
+            }
+        }
+        if($hasPermission){
+            return view('welcome');
+        }else{
+            return view('notfound');
+        }
+        // return view('notfound');
     }
     public function logout(){
         Auth::logout();

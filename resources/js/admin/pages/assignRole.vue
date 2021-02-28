@@ -51,7 +51,7 @@ export default {
 			},
 			isSending : false,
             resources: [
-                {resourceName: 'Home', read:false,write:false,update:false,delete:false,name:'home'},
+                {resourceName: 'Home', read:false,write:false,update:false,delete:false,name:'/'},
                 {resourceName: 'Role', read:false,write:false,update:false,delete:false,name:'role'},
                 {resourceName: 'Assign Role', read:false,write:false,update:false,delete:false,name:'assignRole'},
                 {resourceName: 'Admin User', read:false,write:false,update:false,delete:false,name:'adminUser'},
@@ -59,7 +59,7 @@ export default {
                 {resourceName: 'Category', read:false,write:false,update:false,delete:false,name:'category'},
             ],
             defaultResources: [
-                {resourceName: 'Home', read:false,write:false,update:false,delete:false,name:'home'},
+                {resourceName: 'Home', read:false,write:false,update:false,delete:false,name:'/'},
                 {resourceName: 'Role', read:false,write:false,update:false,delete:false,name:'role'},
                 {resourceName: 'Assign Role', read:false,write:false,update:false,delete:false,name:'assignRole'},
                 {resourceName: 'Admin User', read:false,write:false,update:false,delete:false,name:'adminUser'},
@@ -72,15 +72,17 @@ export default {
 	},
 	methods : {
 		async assignRoles(){
+            this.isSending = true
             let data = JSON.stringify(this.resources)
             const res  = await this.callApi('post','app/assign_roles',{'permission':data,'id':this.data.id})
             if(res.status == 200){
-                this.s("Roles has been Assign Successfully")
+                this.s("Permission Assign Successfully")
                 let index = this.roles.findIndex(role => role.id == this.data.id)
                 this.roles[index].permission = data
             }else{
                 this.swr()
             }
+            this.isSending = false
         },
         changeAdmin(){
             let index = this.roles.findIndex(role => role.id == this.data.id)
