@@ -4,7 +4,7 @@
 			<div class="container-fluid">	
 				<!--~~~~~~~ TABLE ONE ~~~~~~~~~-->
 				<div class="_1adminOverveiw_table_recent _box_shadow _border_radious _mar_b30 _p20">
-					<p class="_title0">Tags <Button @click="addModal=true"><Icon type="md-add"></Icon> Add Tag</Button> </p>
+					<p class="_title0">Tags <Button @click="addModal=true" v-if="isWritePermission"><Icon type="md-add"></Icon> Add Tag</Button> </p>
 
 					<div class="_overflow _table_div">
 						<table class="_table">
@@ -24,10 +24,10 @@
 							<tr v-for="(role,i) in roles" :key="i">
 								<td>{{ i+1 }}</td>
 								<td style="text-transform:capitalize">{{ role.roleName }}</td>
-								<td>{{ role.created_at }}</td>
+								<td>{{ format_date(role.created_at) }}</td>
 								<td>
-									<Button type="info" @click="showEditModal(role,i)">Edit</Button>
-									<Button type="error" @click="showDeletingModel(role,i)" :loading="role.isDeleting">Delete</Button>
+									<Button v-if="isUpdatePermission" type="info" @click="showEditModal(role,i)">Edit</Button>
+									<Button v-if="isDeletePermission" type="error" @click="showDeletingModel(role,i)" :loading="role.isDeleting">Delete</Button>
 									
 								</td>
 							</tr>

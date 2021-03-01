@@ -1,3 +1,5 @@
+import {mapGetters} from 'vuex'
+import moment from 'moment';
 export default{
     data(){
         return {
@@ -45,6 +47,43 @@ export default{
                 title: title,
                 desc: desc
             });
+        },
+        format_date(value){
+            if (value) {
+              return moment(String(value)).format('DD-MM-YYYY hh:mm A')
+             }
+         },
+        checkUserPermission(key){
+            if(!this.userPermission) return true
+            let isPermitted = false
+            for(let d of this.userPermission){
+                if(this.$route.name == d.name){
+                    if(d[key]){
+                        isPermitted = true
+                        break
+                    }else{
+                        break
+                    }
+                }
+            }
+            return isPermitted
         }
     },
+    computed : {
+        ...mapGetters({
+            'userPermission': 'getUserPermission'
+        }),
+        isReadPermission(){
+           return this.checkUserPermission('read')
+        },
+        isWritePermission(){
+            return this.checkUserPermission('write')
+        },
+        isUpdatePermission(){
+            return this.checkUserPermission('update')
+        },
+        isDeletePermission(){
+            return this.checkUserPermission('delete')
+        },
+    }
 }

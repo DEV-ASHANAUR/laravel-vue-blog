@@ -71,6 +71,9 @@ export default {
 		}	
 	},
 	methods : {
+        // giveAllPermission(){
+        //     this.select = true
+        // },
 		async assignRoles(){
             this.isSending = true
             let data = JSON.stringify(this.resources)

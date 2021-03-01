@@ -5,7 +5,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state : {
         counter : 1000,
-        user : false
+        user : false,
+        userPermission:null
     },
     getters : {
         getCounter(state){
@@ -13,6 +14,9 @@ export default new Vuex.Store({
         },
         getUser(state){
             return state.user
+        },
+        getUserPermission(state){
+            return state.userPermission
         }
     },
     mutations: {
@@ -21,6 +25,9 @@ export default new Vuex.Store({
         },
         updateUser(state,data){
             state.user = data
+        },
+        setUserPermission(state,data){
+            state.userPermission = data
         }
     },
     actions : {

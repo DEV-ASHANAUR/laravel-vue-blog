@@ -4,7 +4,7 @@
 			<div class="container-fluid">	
 				<!--~~~~~~~ TABLE ONE ~~~~~~~~~-->
 				<div class="_1adminOverveiw_table_recent _box_shadow _border_radious _mar_b30 _p20">
-					<p class="_title0">Users <Button @click="addModal=true"><Icon type="md-add"></Icon> Add Admin</Button> </p>
+					<p class="_title0">Users <Button @click="addModal=true" v-if="isWritePermission"><Icon type="md-add"></Icon> Add Admin</Button> </p>
 
 					<div class="_overflow _table_div">
 						<table class="_table">
@@ -28,10 +28,10 @@
 								<td style="text-transform:capitalize">{{ user.fullName }}</td>
                                 <td>{{ user.email }}</td>
                                 <td>{{ user.role.roleName }}</td>
-								<td>{{ user.created_at }}</td>
+								<td>{{ format_date(user.created_at) }}</td>
 								<td>
-									<Button type="info" @click="showEditModal(user,i)">Edit</Button>
-									<Button type="error" @click="showDeletingModel(user,i)" :loading="user.isDeleting">Delete</Button>
+									<Button v-if="isUpdatePermission" type="info" @click="showEditModal(user,i)">Edit</Button>
+									<Button v-if="isDeletePermission" type="error" @click="showDeletingModel(user,i)" :loading="user.isDeleting">Delete</Button>
 									
 								</td>
 							</tr>
